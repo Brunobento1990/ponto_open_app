@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ponto_open/pages/home_page.dart';
-import 'package:ponto_open/pages/loading_page.dart';
-import 'package:ponto_open/pages/login_page.dart';
+import 'package:ponto_open/library/configs/theme.dart';
+import 'package:ponto_open/routes.dart';
 
 void main() {
   runApp(const InitialApp());
@@ -15,15 +14,11 @@ class InitialApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: ThemeApp.primary),
         useMaterial3: true,
       ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const LoadingPage(),
-        '/login': (context) => const LoginPage(),
-        '/home': (context) => const HomePage(),
-      },
+      initialRoute: Routes.initialRoute,
+      routes: Routes.getRoutesApp(),
     );
   }
 }

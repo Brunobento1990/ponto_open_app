@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:ponto_open/configs/logos.dart';
-import 'package:ponto_open/configs/theme.dart';
+import 'package:ponto_open/library/configs/logos.dart';
+import 'package:ponto_open/library/configs/theme.dart';
+import 'package:ponto_open/login/login_api.dart';
+import 'package:ponto_open/login/login_storage.dart';
 import 'package:ponto_open/widgets/button_widget.dart';
 import 'package:ponto_open/widgets/scafold_widget.dart';
 import 'package:ponto_open/widgets/text_field_widget.dart';
@@ -17,6 +19,24 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController chaveDeAcessoController = TextEditingController();
   TextEditingController usuarioChaveController = TextEditingController();
+  String _usuarioId = '';
+  String _empresaId = '';
+
+  Future<void> _login() async {
+    if (_usuarioId.isEmpty || _empresaId.isEmpty) {
+      return;
+    }
+    final usuario = await LoginApi.login(
+        usuarioId: _usuarioId, empresaId: _empresaId, context: context);
+    if (usuario == null) {
+      return;
+    }
+    await LoginStorage.login(
+        usuario: usuario, empresaId: _empresaId, usuarioId: _usuarioId);
+    if (mounted) {
+      Navigator.pushReplacementNamed(context, '/home');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +56,8 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Container(
-                      height: 35.0,
-                      width: 35.0,
+                      height: 50.0,
+                      width: 50.0,
                       decoration: BoxDecoration(
                         borderRadius: const BorderRadius.all(
                           Radius.circular(10.0),
@@ -67,14 +87,16 @@ class _LoginPageState extends State<LoginPage> {
                 TextFieldCustom(
                   controller: chaveDeAcessoController,
                   label: 'Chave da empresa',
+                  onChanged: (value) => _empresaId = value,
                 ),
                 const SizedBox(height: 16.0),
                 TextFieldCustom(
                   controller: usuarioChaveController,
                   label: 'Sua chave',
+                  onChanged: (value) => _usuarioId = value,
                 ),
                 const SizedBox(height: 16.0),
-                ButtonCustom(onPressed: () {}),
+                ButtonCustom(onPressed: _login),
               ],
             ),
           ),

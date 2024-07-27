@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AcessStorage {
+class StorageAdapter {
   static Future<String?> getStringStorage(String key) async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(key);

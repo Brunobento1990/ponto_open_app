@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:ponto_open/configs/logos.dart';
-import 'package:ponto_open/configs/storage_keys.dart';
-import 'package:ponto_open/storage/acess_storage.dart';
+import 'package:ponto_open/library/adapters/storage_adapter.dart';
+import 'package:ponto_open/library/configs/logos.dart';
+import 'package:ponto_open/library/configs/storage_keys.dart';
+import 'package:ponto_open/login/login_api.dart';
+import 'package:ponto_open/login/login_storage.dart';
 import 'package:ponto_open/widgets/loading_custom.dart';
 import 'package:ponto_open/widgets/scafold_widget.dart';
 
@@ -20,11 +22,10 @@ class LoadingPageState extends State<LoadingPage> {
   }
 
   Future<void> _loading() async {
-    await Future.delayed(const Duration(seconds: 2));
     final empresaId =
-        await AcessStorage.getStringStorage(StorageKeys.empresaId);
+        await StorageAdapter.getStringStorage(StorageKeys.empresaId);
     final usuarioId =
-        await AcessStorage.getStringStorage(StorageKeys.usuarioId);
+        await StorageAdapter.getStringStorage(StorageKeys.usuarioId);
 
     if (empresaId == null ||
         empresaId.isEmpty ||
@@ -35,7 +36,19 @@ class LoadingPageState extends State<LoadingPage> {
       }
     } else {
       if (mounted) {
-        Navigator.pushReplacementNamed(context, '/home');
+        final usuario = await LoginApi.login(
+            usuarioId: usuarioId, empresaId: empresaId, context: context);
+        if (usuario == null) {
+          if (mounted) {
+            Navigator.pushReplacementNamed(context, '/login');
+          }
+          return;
+        }
+        await LoginStorage.login(
+            usuario: usuario, empresaId: empresaId, usuarioId: usuarioId);
+        if (mounted) {
+          Navigator.pushReplacementNamed(context, '/home');
+        }
       }
     }
   }

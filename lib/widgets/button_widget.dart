@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ponto_open/configs/theme.dart';
+import 'package:ponto_open/library/configs/theme.dart';
 
 class ButtonCustom extends StatefulWidget {
   final void Function()? onPressed;

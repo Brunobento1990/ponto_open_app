@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:ponto_open/configs/theme.dart';
+import 'package:ponto_open/library/configs/theme.dart';
 import 'package:ponto_open/widgets/text_widget.dart';
 
 class LoadingCustom extends StatelessWidget {
