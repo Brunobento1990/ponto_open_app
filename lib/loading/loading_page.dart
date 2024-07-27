@@ -4,7 +4,7 @@ import 'package:ponto_open/library/configs/logos.dart';
 import 'package:ponto_open/library/configs/storage_keys.dart';
 import 'package:ponto_open/login/login_api.dart';
 import 'package:ponto_open/login/login_storage.dart';
-import 'package:ponto_open/widgets/loading_custom.dart';
+import 'package:ponto_open/widgets/loading_widget.dart';
 import 'package:ponto_open/widgets/scafold_widget.dart';
 
 class LoadingPage extends StatefulWidget {
@@ -22,6 +22,7 @@ class LoadingPageState extends State<LoadingPage> {
   }
 
   Future<void> _loading() async {
+    Future.delayed(const Duration(seconds: 2));
     final empresaId =
         await StorageAdapter.getStringStorage(StorageKeys.empresaId);
     final usuarioId =

@@ -6,6 +6,11 @@ class StorageAdapter {
     return prefs.getString(key);
   }
 
+  static Future remove(String key) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(key);
+  }
+
   static Future<bool> setStringStorage(String key, String value) async {
     try {
       final prefs = await SharedPreferences.getInstance();

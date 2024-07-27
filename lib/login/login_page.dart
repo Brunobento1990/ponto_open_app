@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:ponto_open/library/configs/logos.dart';
 import 'package:ponto_open/library/configs/theme.dart';
+import 'package:ponto_open/library/notifier/loading_notifier.dart';
 import 'package:ponto_open/login/login_api.dart';
 import 'package:ponto_open/login/login_storage.dart';
 import 'package:ponto_open/widgets/button_widget.dart';
 import 'package:ponto_open/widgets/scafold_widget.dart';
 import 'package:ponto_open/widgets/text_field_widget.dart';
 import 'package:ponto_open/widgets/text_widget.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -26,15 +28,19 @@ class _LoginPageState extends State<LoginPage> {
     if (_usuarioId.isEmpty || _empresaId.isEmpty) {
       return;
     }
+    final provider = Provider.of<LoadingNotifier>(context, listen: false);
+    provider.setLoading(true);
     final usuario = await LoginApi.login(
         usuarioId: _usuarioId, empresaId: _empresaId, context: context);
     if (usuario == null) {
+      provider.setLoading(false);
       return;
     }
     await LoginStorage.login(
         usuario: usuario, empresaId: _empresaId, usuarioId: _usuarioId);
     if (mounted) {
       Navigator.pushReplacementNamed(context, '/home');
+      provider.setLoading(false);
     }
   }
 
@@ -94,6 +100,8 @@ class _LoginPageState extends State<LoginPage> {
                   controller: usuarioChaveController,
                   label: 'Sua chave',
                   onChanged: (value) => _usuarioId = value,
+                  textInputAction: TextInputAction.go,
+                  onFieldSubmitted: (_) async => await _login(),
                 ),
                 const SizedBox(height: 16.0),
                 ButtonCustom(onPressed: _login),

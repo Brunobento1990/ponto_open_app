@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ponto_open/login/login_storage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -38,7 +39,9 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: () async {
+          await LoginStorage.logout();
+        },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),

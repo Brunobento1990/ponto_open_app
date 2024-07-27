@@ -14,4 +14,11 @@ class LoginStorage {
     await StorageAdapter.setStringStorage(StorageKeys.empresaId, empresaId);
     await StorageAdapter.setStringStorage(StorageKeys.usuarioId, usuarioId);
   }
+
+  static Future<void> logout() async {
+    await StorageAdapter.remove(StorageKeys.empresa);
+    await StorageAdapter.remove(StorageKeys.usuario);
+    await StorageAdapter.remove(StorageKeys.empresaId);
+    await StorageAdapter.remove(StorageKeys.usuarioId);
+  }
 }

@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:ponto_open/library/configs/theme.dart';
+import 'package:ponto_open/library/notifier/loading_notifier.dart';
 import 'package:ponto_open/routes.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const InitialApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => LoadingNotifier()),
+      ],
+      child: const InitialApp(),
+    ),
+  );
 }
 
 class InitialApp extends StatelessWidget {
