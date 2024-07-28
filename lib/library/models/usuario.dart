@@ -45,6 +45,12 @@ class Usuario {
     };
   }
 
+  static Usuario? fromStorage(String? usuarioStorage) {
+    if (usuarioStorage == null) return null;
+
+    return Usuario.fromJson(jsonDecode(usuarioStorage));
+  }
+
   @override
   String toString() {
     return jsonEncode(toJson());

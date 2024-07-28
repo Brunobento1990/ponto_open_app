@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:ponto_open/login/login_storage.dart';
+import 'package:ponto_open/home/home_api.dart';
+import 'package:ponto_open/library/models/ponto.dart';
+import 'package:ponto_open/widgets/card_bater_ponto_widget.dart';
+import 'package:ponto_open/widgets/card_historico_ponto_widget.dart';
+import 'package:ponto_open/widgets/header_widget.dart';
+import 'package:ponto_open/widgets/scafold_widget.dart';
+import 'package:ponto_open/widgets/text_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -9,41 +15,61 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _counter = 0;
+  List<Ponto> pontos = [];
+  final HomeApi api = HomeApi();
 
-  void _incrementCounter() {
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
+
+  Future<void> init() async {
+    final result = await api.getUltimosPontos();
     setState(() {
-      _counter++;
+      pontos = result;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Login'),
-      ),
-      body: Center(
+    return ScafoldWidgetCustom(
+      children: SizedBox(
+        height: double.infinity,
+        width: double.infinity,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+          children: [
+            const HeaderWidget(),
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  children: [
+                    TextCustom(
+                      text: 'Últimos registros',
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ],
+                ),
+              ],
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+            SizedBox(
+              width: double.infinity,
+              height: 90,
+              child: ListView.builder(
+                padding: const EdgeInsets.all(8),
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (_, index) => CardHistoricoPontoWidget(
+                  ponto: pontos[index],
+                  index: index,
+                ),
+                itemCount: pontos.length,
+              ),
             ),
+            const CardBaterPontoWidget(),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          await LoginStorage.logout();
-        },
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }

@@ -27,6 +27,37 @@ class HttpService {
       // ignore: use_build_context_synchronously
       return _handleResponseApi(response, context);
     } catch (e) {
+      if (context != null) {
+        SnackBarCustom.open(
+            context: context,
+            mesage: 'Ocorreu um erro interno, tente novamente!',
+            erro: true);
+      }
+      return null;
+    }
+  }
+
+  Future<dynamic> get(
+      {required String path,
+      bool autentica = true,
+      BuildContext? context}) async {
+    try {
+      final headers = await _getHeader(autentica);
+      var response = await http
+          .get(
+            Uri.parse('$_urlApi$path'),
+            headers: headers,
+          )
+          .timeout(_timeout);
+      // ignore: use_build_context_synchronously
+      return _handleResponseApi(response, context);
+    } catch (e) {
+      if (context != null) {
+        SnackBarCustom.open(
+            context: context,
+            mesage: 'Ocorreu um erro interno, tente novamente!',
+            erro: true);
+      }
       return null;
     }
   }
@@ -55,7 +86,10 @@ class HttpService {
       if (empresaId == null || usuarioId == null) {
         throw Exception("Não autorizado!");
       }
-      headers.addAll({'EmpresaId': empresaId, 'UsuarioId': usuarioId});
+      headers.addAll({
+        'ChaveDeAcessoEmpresa': empresaId,
+        'ChaveDeAcessoUsuario': usuarioId
+      });
     }
 
     return headers;
