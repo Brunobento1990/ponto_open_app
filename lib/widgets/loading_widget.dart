@@ -4,10 +4,18 @@ import 'package:ponto_open/library/configs/theme.dart';
 import 'package:ponto_open/widgets/text_widget.dart';
 
 class LoadingCustom extends StatelessWidget {
-  const LoadingCustom({super.key});
+  final bool withMessage;
+  const LoadingCustom({super.key, this.withMessage = true});
 
   @override
   Widget build(BuildContext context) {
+    if (!withMessage) {
+      return LoadingAnimationWidget.threeRotatingDots(
+        color: ThemeApp.primary,
+        size: 30,
+      );
+    }
+
     return Center(
       child: Column(
         children: [

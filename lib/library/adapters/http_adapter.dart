@@ -72,6 +72,10 @@ class HttpService {
       }
     }
 
+    if (response.statusCode != 200 && response.statusCode != 201) {
+      return null;
+    }
+
     return body;
   }
 

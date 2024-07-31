@@ -19,7 +19,7 @@ class _CardHistoricoPontoWidgetState extends State<CardHistoricoPontoWidget> {
     final bool isEntrada = widget.index / 2 == 0;
     final Color color = isEntrada ? Colors.green : Colors.red;
     return SizedBox(
-      width: 90,
+      width: 100,
       height: 70,
       child: Card(
         child: Column(
