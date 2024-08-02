@@ -68,7 +68,7 @@ class LoadingPageState extends State<LoadingPage> {
                 Radius.circular(20.0),
               ),
               image: DecorationImage(
-                image: Image.asset(Logos.logoGrande).image,
+                image: Image.asset(Logos.logoPequena).image,
                 fit: BoxFit.fill,
               ),
             ),

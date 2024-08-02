@@ -16,7 +16,7 @@ class CardHistoricoPontoWidget extends StatefulWidget {
 class _CardHistoricoPontoWidgetState extends State<CardHistoricoPontoWidget> {
   @override
   Widget build(BuildContext context) {
-    final bool isEntrada = widget.index / 2 == 0;
+    final bool isEntrada = widget.index % 2 == 0;
     final Color color = isEntrada ? Colors.green : Colors.red;
     return SizedBox(
       width: 100,

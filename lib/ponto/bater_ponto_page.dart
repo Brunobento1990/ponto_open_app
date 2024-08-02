@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:ponto_open/library/adapters/localizacao_adapter.dart';
 import 'package:ponto_open/library/dtos/response_localizacao_dto.dart';
+import 'package:ponto_open/library/notifier/loading_notifier.dart';
 import 'package:ponto_open/ponto/ponto_api.dart';
 import 'package:ponto_open/widgets/button_widget.dart';
 import 'package:ponto_open/widgets/loading_widget.dart';
 import 'package:ponto_open/widgets/scafold_widget.dart';
+import 'package:ponto_open/widgets/snack_bar_widget.dart';
 import 'package:ponto_open/widgets/text_widget.dart';
+import 'package:provider/provider.dart';
 
 class BaterPontoPage extends StatefulWidget {
   const BaterPontoPage({super.key});
@@ -28,7 +31,11 @@ class _BaterPontoPageState extends State<BaterPontoPage> {
   }
 
   Future<void> init() async {
-    final result = await localizacao.getLocalizacao();
+    final result = await localizacao.getLocalizacao(context);
+    if (result == null) {
+      _voltar();
+      return;
+    }
     if (mounted) {
       final responseLocalizacaoResult = await pontoApi.getLocation(
           result.latitude.toString(), result.longitude.toString(), context);
@@ -37,6 +44,33 @@ class _BaterPontoPageState extends State<BaterPontoPage> {
         erroResponseLocalizacao = responseLocalizacaoResult == null;
       });
     }
+  }
+
+  _voltar() async {
+    if (mounted) {
+      await Navigator.of(context).pushReplacementNamed('/home');
+    }
+  }
+
+  _baterPonto() async {
+    final provider = Provider.of<LoadingNotifier>(context, listen: false);
+    provider.setLoading(true);
+    var result = await pontoApi.baterPonto(
+        '${data.hour.toString().padLeft(0, '0')}:${data.minute.toString().padLeft(0, '0')}:${data.second.toString().padLeft(0, '0')}',
+        responseLocalizacao?.endereco ?? 'test',
+        context);
+
+    if (result && mounted) {
+      SnackBarCustom.open(
+          context: context, mesage: 'Ponto registrado com sucesso.');
+
+      await Future.delayed(const Duration(seconds: 2));
+      if (mounted) {
+        provider.setLoading(false);
+        await Navigator.of(context).pushReplacementNamed('/home');
+      }
+    }
+    provider.setLoading(false);
   }
 
   @override
@@ -62,7 +96,7 @@ class _BaterPontoPageState extends State<BaterPontoPage> {
                         fontWeight: FontWeight.bold,
                       ),
                       ButtonCustom(
-                        onPressed: () {},
+                        onPressed: _voltar,
                         text: 'Voltar',
                       ),
                     ],
@@ -94,7 +128,7 @@ class _BaterPontoPageState extends State<BaterPontoPage> {
                     ),
                     TextCustom(
                       text: '${data.hour}:${data.minute}',
-                      fontSize: 24,
+                      fontSize: 26,
                       fontWeight: FontWeight.bold,
                     ),
                     responseLocalizacao == null
@@ -115,8 +149,13 @@ class _BaterPontoPageState extends State<BaterPontoPage> {
                             fontSize: 16,
                           ),
                     ButtonCustom(
-                      onPressed: () {},
+                      onPressed: _baterPonto,
                       text: 'Confirmar',
+                    ),
+                    ButtonCustom(
+                      onPressed: _voltar,
+                      text: 'Voltar',
+                      transparente: true,
                     ),
                   ],
                 ),

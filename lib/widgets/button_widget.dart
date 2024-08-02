@@ -9,8 +9,14 @@ class ButtonCustom extends StatefulWidget {
   final String? text;
   final double? width;
   final double? heigth;
+  final bool transparente;
   const ButtonCustom(
-      {super.key, required this.onPressed, this.text, this.width, this.heigth});
+      {super.key,
+      required this.onPressed,
+      this.text,
+      this.width,
+      this.heigth,
+      this.transparente = false});
 
   @override
   State<ButtonCustom> createState() => _ButtonCustomState();
@@ -23,7 +29,8 @@ class _ButtonCustomState extends State<ButtonCustom> {
       return ElevatedButton(
         onPressed: provider.loading ? null : widget.onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: ThemeApp.primary,
+          backgroundColor:
+              widget.transparente ? Colors.transparent : ThemeApp.primary,
           minimumSize:
               Size(widget.width ?? double.infinity, widget.heigth ?? 40.0),
         ),

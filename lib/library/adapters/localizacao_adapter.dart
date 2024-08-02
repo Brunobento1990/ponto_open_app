@@ -1,30 +1,43 @@
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:ponto_open/widgets/snack_bar_widget.dart';
 
 class LocalizacaoAdapter {
-  Future<Position> getLocalizacao() async {
+  Future<Position?> getLocalizacao(BuildContext context) async {
     bool serviceEnabled;
     LocationPermission permission;
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
+      SnackBarCustom.open(
+          context: context,
+          mesage: 'Ative a localização do seu celular.',
+          erro: true);
+      return null;
     }
 
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        //não aceitou a permissão
-        return Future.error('Location permissions are denied');
+        SnackBarCustom.open(
+            context: context,
+            mesage: 'Você deve aceitar o acesso à localização.',
+            erro: true);
+        return null;
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      // Permissions are denied forever, handle appropriately.
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
+      SnackBarCustom.open(
+          context: context,
+          mesage:
+              'Permissão negada permanentemente. Habilite manualmente nas configurações do dispositivo.',
+          erro: true);
+      return null;
     }
 
+    // Permissão concedida, obter a localização atual
     return await Geolocator.getCurrentPosition();
   }
 }

@@ -37,12 +37,6 @@ class _CardBaterPontoWidgetState extends State<CardBaterPontoWidget> {
     });
   }
 
-  String _getMes() {
-    return _dataAtual.month < 10
-        ? '0${_dataAtual.month}'
-        : '${_dataAtual.month < 10}';
-  }
-
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -64,7 +58,7 @@ class _CardBaterPontoWidgetState extends State<CardBaterPontoWidget> {
                 ),
                 TextCustom(
                   text:
-                      '${_dataAtual.hour - 3}:${_dataAtual.minute}:${_dataAtual.second} | ${_dataAtual.day}/${_getMes()}/${_dataAtual.year}',
+                      '${_dataAtual.hour.toString().padLeft(2, '0')}:${_dataAtual.minute.toString().padLeft(2, '0')}:${_dataAtual.second.toString().padLeft(2, '0')} | ${_dataAtual.day.toString().padLeft(2, '0')}/${_dataAtual.month.toString().padLeft(2, '0')}/${_dataAtual.year}',
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
                 )

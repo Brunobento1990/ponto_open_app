@@ -16,4 +16,15 @@ class PontoApi {
 
     return ResponseLocalizacaoDto.fromJson(response);
   }
+
+  Future<bool> baterPonto(
+      String horario, String endereco, BuildContext? context) async {
+    final response = await _api.post(
+      path: 'ponto',
+      body: {'horario': horario, 'endereco': endereco},
+      context: context,
+    );
+
+    return response != null;
+  }
 }
